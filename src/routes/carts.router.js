@@ -2,9 +2,10 @@ import { Router } from "express"
 import CartManager from "../dao/database/CartManager.js"
 
 const cart = new CartManager()
-const cartsRouter = Router()
+const router = Router()
 
-cartsRouter.post('/', async (req, res) => {
+//crear carrito
+router.post('/', async (req, res) => {
     try {
         const newCart = await cart.addCarts()
         return res.status(200).send({ status: "OK", data: newCart })    
@@ -13,7 +14,8 @@ cartsRouter.post('/', async (req, res) => {
     }
 })
 
-cartsRouter.get('/', async (req, res) => {
+//ver todos los carritos
+router.get('/', async (req, res) => {
     try {
         const carts = await cart.getCarts()
     
@@ -23,7 +25,8 @@ cartsRouter.get('/', async (req, res) => {
     }
 })
 
-cartsRouter.get('/:cid', async (req, res) => {
+//obtener carrito por id
+router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
         const foundCart = await cart.getCartById(cid)
@@ -34,7 +37,8 @@ cartsRouter.get('/:cid', async (req, res) => {
     }
 })
 
-cartsRouter.post('/:cid/products/:pid', async (req, res) => {
+//agregar producto en carrito
+router.post('/:cid/products/:pid', async (req, res) => {
     try {
         const cartId = req.params.cid
         const productId = req.params.pid
@@ -42,10 +46,64 @@ cartsRouter.post('/:cid/products/:pid', async (req, res) => {
 
         const result = await cart.addProductInCart(cartId, { _id: productId, quantity: quantity })
 
-        return res.status(200).send({ message: `El producto ${productId} ha sido agregado al carrito`, cart: result})
+        return res.status(200).send({ message: `El producto ${productId} ha sido agregado al carrito`, data: result})
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
 })
 
-export default cartsRouter
+//eliminar carrito por id
+router.delete('/:cid', async (req, res) => {
+    try {
+        const cid = req.params.cid
+        const response = await cart.deleteCart(cid)
+
+        if (response === true) {
+            res.status(200).send({ message: 'Carrito eliminado', cart: response })
+        } else {
+            res.status(404).send({ message: 'Carrito no encontrado', response })
+        }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+//actualizar la cantidad de productos 
+router.put('/:cid/products/:pid', async (req, res) => {
+    try {
+        const cartId = req.params.cid
+        const productId = req.params.pid
+        //const quantity = req.body
+    
+        const update = await cart.updateProductInCart(cartId, productId)
+        return res.status(200).send({ status: 'OK', data: update })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+//eliminar del carrito el producto seleccionado
+router.delete('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params
+        const productDelete = await cart.deleteProductInCart(cid, pid)
+
+        return res.status(200).send({ message: `El producto se eliminó`, data: productDelete })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+//eliminar todos los productos del carrito 
+router.delete('/:cid', async (req, res) => {
+    try {
+        const cid = req.params.cid 
+
+        const deleteCart = await cart.findById(cid)
+        res.status(200).send({ status: 'OK', data: deleteCart })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+export default router
