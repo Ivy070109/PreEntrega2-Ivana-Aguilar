@@ -1,20 +1,21 @@
-<div class="position-relative" id="title">
-    <h1>NUEVOS INGRESOS</h1>
+<div id="titlePrincipal">
+    <h1>BIENVENIDA</h1>
+    <h3>Nuevos Ingresos</h3>
 </div>
 
-{{#each productsList}}
-<article class="container">
-    <div class="card">
-        <div class="imgBx">
-            <img src="{{thumbnail}}" height="310" width="200"/>
+{{#each listProducts}}
+    <article class="container">
+        <div class="card">
+            <div class="imgBx">
+                <img src="{{thumbnail}}" height="310" width="200"/>
+            </div>
+            <div class="contentBx" id="compra">
+                <h2>{{title}}</h2>
+                <p>${{price}}</p>
+                <button class="botons" type="button" id="buy" href="#">Comprar</button>
+            </div>
         </div>
-        <div class="contentBx" id="compra">
-            <h2>{{title}}</h2>
-            <p>${{price}}</p>
-            <button class="botons" type="button" id="buy" href="#">Comprar</button>
-        </div>
-    </div>
-</article>
+    </article> 
 {{/each}}
 
 
