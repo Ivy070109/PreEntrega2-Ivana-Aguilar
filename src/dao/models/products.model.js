@@ -1,4 +1,6 @@
 import mongoose from "mongoose"
+//importar paginate 
+//import mongoosePaginate from 'mongoose-paginate-v2'
 
 mongoose.pluralize(null)
 
@@ -32,7 +34,8 @@ const schema = new mongoose.Schema({
     },
     category: {
         type: String,
-        required: true
+        required: true,
+        index: true
     },
     status: {
         type: Boolean,

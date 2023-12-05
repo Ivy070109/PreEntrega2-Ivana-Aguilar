@@ -89,13 +89,35 @@ class CartManager {
     }
 
     //borrar productos en carrito
-    deleteProductInCart = async (cartId, productId) => {
+    deleteProductById = async (cartId, productId) => {
         try {
             const newCart = await cartModel.updateOne({ _id: cartId }, { $pull: { products: { _id: productId } } })
             return newCart
         } catch (err) {
             return err.message()
         }
+        // try {
+        //     const cart = await this.getCartById(cartId)
+        //     if (!cart) {
+        //         return err.message(`El carrito no existe`)
+        //     }
+
+            // const product = await productsModel.getProductById(productId)
+            // if (!product) {
+            //     return err.message(`El producto no existe`)
+            // }
+
+        //     const deleteProduct = cart.products.findIndex(prod => prod.id_prod._id.toString() === productId)
+        //     if (index !== -1) {
+        //         cart.products.splice(index, 1)
+        //     } else {
+        //         return err.message(`El producto no se encuentra en el carrito`)
+        //     }
+
+        //     return deleteProduct
+        // } catch (err) {
+        //     return err.message
+        // }
     }
 
     //modificar producto en carrito 
