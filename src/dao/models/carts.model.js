@@ -7,19 +7,26 @@ mongoose.pluralize(null)
 const collection = "carts"
 
 const schema = new mongoose.Schema({
-    products: {
-        type: [
-            {
-                product: {
-                    type: mongoose.Schema.Types.ObjectId, 
-                    ref: 'products'
-                },
-                quantity: Number,
-                _id: false,
-            },
-        ],
-        default: [],
-    }
+    products: [
+        {
+            product: { type: [ mongoose.Schema.Types.ObjectId ], ref: 'products' },
+            quantity: Number, 
+            _id: false, 
+        }
+    ]
+
+        //[
+        //     {
+        //         product: {
+        //             type: mongoose.Schema.Types.ObjectId, 
+        //             ref: 'products'
+        //         },
+        //         quantity: Number,
+        //         _id: false,
+        //     },
+        // ],
+
+
 })
 
 //populate

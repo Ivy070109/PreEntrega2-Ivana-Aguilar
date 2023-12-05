@@ -1,0 +1,23 @@
+<h1>Carrito</h1>
+
+{{#each cartProducts}}
+<div id="productContainer" class="cards-container">
+    <div class="card-item" data-code="${product.code}">
+  <div class="card-img">
+      <img src="{{thumbnail}}"
+          alt="{{title}}">
+  </div>
+  <div class="card-details">
+      <h5>${product.title}</h5>
+      <p>${product.description}.</p>
+      <span>Price: $${product.price}</span> <br>
+      <span>Cantidad: ${quantity}</span> <br>
+      <span>Categoria: ${product.category}</span>
+  </div>
+</div>
+</div>
+{{/each}}
+
+{{!--
+<script src="/socket.io/socket.io.js"></script> --}}
+<script src="/js/carts.js"></script>

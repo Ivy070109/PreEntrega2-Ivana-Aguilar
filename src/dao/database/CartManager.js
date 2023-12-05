@@ -7,6 +7,7 @@ class CartManager {
     //obtener carrito
     getCarts = async () => {
         try {
+            //const carts = await cartModel.find().explain('executionStats')
             const carts = await cartModel.find().lean()
             return carts
         } catch (err) {
