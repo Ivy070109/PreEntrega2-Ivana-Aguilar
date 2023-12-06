@@ -7,6 +7,7 @@ class ProductManager {
     //leer los productos
     readProducts = async () => {
         try {
+            //const reading = await productModel.find({ category: "remeras" }).explain('executionStats')
             const reading = await productModel.find().lean()
             return reading
         } catch (err) {
