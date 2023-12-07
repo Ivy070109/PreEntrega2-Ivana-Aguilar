@@ -1,4 +1,5 @@
-import productModel from "../models/products.model.js";
+import productModel from "../models/products.model.js"
+import mongoosePaginate from 'mongoose-paginate-v2'
 
 class ProductManager {
     constructor() {
@@ -7,9 +8,20 @@ class ProductManager {
     //leer los productos
     readProducts = async () => {
         try {
-            //const reading = await productModel.find({ category: "remeras" }).explain('executionStats')
-            const reading = await productModel.find().lean()
-            return reading
+            // const products = await productModel.paginate(
+            //     {}, 
+            //     {   
+            //         page: page, 
+            //         limit: limit,
+            //         category: category,
+            //         sort: sort,
+            //         lean: true,
+            //     }
+            // )
+            // return products
+
+            const products = await productModel.find().lean()
+            return products
         } catch (err) {
             return err.message
         }
@@ -26,10 +38,39 @@ class ProductManager {
     }
 
     //obtener todos los productos
-    getProducts = async () => {
-        try {
-            const products = await this.readProducts()
-            return products
+    getProducts = async (page, limit, category, sort, status) => {
+        let options = {
+			page: page || 1,
+			limit: limit || 10
+		}
+		try {
+			if (category) {
+				const products = await productModel.paginate({ category: category }, options)
+				return products
+			}
+
+			if (status) {
+				const products = await productModel.paginate({ status: status }, options)
+				return products
+			}
+
+			if (sort) {
+				if (sort === 'asc') {
+					options.sort = { price: 1 }
+					console.log(options)
+
+					const products = await productModel.paginate({}, options)
+					return products
+				}
+				if (sort === 'desc') {
+					options.sort = { price: -1 }
+					const products = await productModel.paginate({}, options)
+					return products
+				}
+			}
+
+			const products = await productModel.paginate({}, options)
+			return products
         } catch (err) {
             return err.message
         }

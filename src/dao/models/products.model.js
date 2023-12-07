@@ -1,7 +1,7 @@
 import mongoose from "mongoose"
 //importar paginate 
 import mongoosePaginate from 'mongoose-paginate-v2'
-//import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2'
+import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 mongoose.pluralize(null)
 
@@ -15,7 +15,6 @@ const schema = new mongoose.Schema({
     description: {
         type: String,
         required: true,
-        //index: true,
     },
     price: {
         type: Number,
@@ -37,7 +36,9 @@ const schema = new mongoose.Schema({
     category: {
         type: String,
         required: true,
-        index: true
+        //enum: [ "remeras", "pantalones", "vestidos", "faldas", "abrigos", "sweaters" ],
+        //default: '',
+        // index: true
     },
     status: {
         type: Boolean,
@@ -46,7 +47,7 @@ const schema = new mongoose.Schema({
 })
 
 schema.plugin(mongoosePaginate)
-//schema.plugin(mongooseAggregatePaginate)
+schema.plugin(mongooseAggregatePaginate)
 
 const model = mongoose.model(collection, schema)
 export default model

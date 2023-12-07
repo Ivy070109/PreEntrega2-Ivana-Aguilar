@@ -1,11 +1,10 @@
-<h1>Productos</h1>
+<h1>{{title}}</h1>
 
-<h2>Lista de Productos</h2>
+{{!-- <h2>Lista de Productos</h2>  --}}
 {{!-- <div id="productContainer" class="cards-container">
 
 </div> --}}
-<article id="list-products">  
-    {{#each productsList}}
+    {{#each products}}
     <div class="container">
         <div class="card">
             <div class="imgBx">
@@ -20,7 +19,6 @@
         </div>
     </div>
     {{/each}}
-</article>
 
 <div class="controller-pagination">
     <button id="prevPage-button"><img src="/assets/arrow-left.svg" alt="arrow left button"></button>
