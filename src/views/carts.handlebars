@@ -1,4 +1,6 @@
-<ul class="bg-primary" style="width: 24rem">
+<div id="titlePrincipal">
+    <h2>Carrito</h2>
+</div>
 
   {{#each cartsProducts}}
     <li class="card text-center mt-2 mb-2" style="width: 20rem">
@@ -13,11 +15,8 @@
         {{this.id_prod.stock}}
         || Código:{{this.id_prod.code}}</h5>
       <h3>Cantidad: {{this.quantity}}</h3>
-
     </li>
-  {{/each}}
 
-</ul>
 
 {{!--
 <script src="/socket.io/socket.io.js"></script> --}}

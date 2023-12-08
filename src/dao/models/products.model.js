@@ -1,7 +1,6 @@
 import mongoose from "mongoose"
 //importar paginate 
 import mongoosePaginate from 'mongoose-paginate-v2'
-import mongooseAggregatePaginate from 'mongoose-aggregate-paginate-v2'
 
 mongoose.pluralize(null)
 
@@ -47,7 +46,6 @@ const schema = new mongoose.Schema({
 })
 
 schema.plugin(mongoosePaginate)
-schema.plugin(mongooseAggregatePaginate)
 
 const model = mongoose.model(collection, schema)
 export default model

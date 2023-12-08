@@ -14,11 +14,11 @@ const socketProducts = (socketServer) => {
         socketServer.emit('productsupdated', updatedProducts)
         })
     
-        socket.on('deleteProduct', async (id) => {
-            await productManager.deleteProduct(id)
-            const newProductList = await productManager.getProducts()
-        socketServer.emit('productsupdated', newProductList)
-        })
+        // socket.on('deleteProduct', async (id) => {
+        //     await productManager.deleteProduct(id)
+        //     const newProductList = await productManager.getProducts()
+        // socketServer.emit('productsupdated', newProductList)
+        // })
 
         socket.on('nuevoUsuario', (usuario) => {
             console.log('usuario', usuario)

@@ -52,12 +52,13 @@ form.addEventListener("submit", (evt) => {
   form.reset()
 })
 
-document.getElementById("delete-btn").addEventListener("click", function () {
-    const deleteidinput = document.getElementById("id-prod")
-    const deleteid = parseInt(deleteidinput.value)
-    socketClient.emit("deleteProduct", deleteid)
-    deleteidinput.value = ""
-})
+// document.getElementById("delete-btn").addEventListener("click", function () {
+//     const deleteidinput = document.getElementById("id-prod")
+//     const deleteid = parseInt(deleteidinput.value)
+//     socketClient.emit("deleteProduct", deleteid)
+//     deleteidinput.value = ""
+// })
+//borro el event porque ya no utilizo el botón de borrar
 
 socketClient.on("productsupdated", (obj) => {
   updateproducts(obj)

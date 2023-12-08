@@ -1,31 +1,31 @@
-<h1>{{title}}</h1>
+<div id="titlePrincipal">
+    <h1>NUESTROS PRODUCTOS</h1>
+</div>
 
-{{!-- <h2>Lista de Productos</h2>  --}}
-{{!-- <div id="productContainer" class="cards-container">
-
-</div> --}}
-    {{#each products}}
-    <div class="container">
+{{#each products.docs}}
+    <article class="container">
         <div class="card">
             <div class="imgBx">
-                    <img src="{{thumbnail}}" height="310" width="200"/>
+                <img src="{{this.thumbnail}}" height="310" width="200"/>
             </div>
             <div class="contentBx" id="compra">
-                <h2>{{title}}</h2>
-                <p>${{price}}</p>
-                <p>{{description}}</p>
+                <h2>{{this.title}}</h2>
+                <p>${{data.price}}</p>
                 <button class="botons" type="button" id="buy" href="#">Comprar</button>
             </div>
         </div>
-    </div>
-    {{/each}}
+    </article> 
+{{/each}}
 
-<div class="controller-pagination">
-    <button id="prevPage-button"><img src="/assets/arrow-left.svg" alt="arrow left button"></button>
-    <input id="inputPage" type="number" value="1">
-    <button id="nextPage-button"><img src="/assets/arrow-right.svg" alt="arrow right button"></button>
-</div>
+<nav aria-label="Paginacion">
+    <ul class="pagination">
+        {{#if products.hasPrevPage}}<li class="page-item"><a class="page-link" href="/products?page={{products.prevPage}}">Página Anterior</a></li>{{/if}}
+        <li class="page-item"><a class="page-link" href="/products?page=1">Página 1</a></li>
+        <li class="page-item"><a class="page-link" href="#">Pg {{products.page}} de {{products.totalPages}}</a></li>
+        {{#if products.hasNextPage}}<li class="page-item"><a class="page-link" href="/products?page={{products.nextPage}}">Siguiente</a></li>{{/if}}
+    </ul>
+</nav>
+
 
 {{!--
 <script src="/socket.io/socket.io.js"></script> --}}
-<script src="/static/js/products.js"></script>

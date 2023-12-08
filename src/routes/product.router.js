@@ -1,17 +1,18 @@
 import { Router } from 'express'
 import ProductManager from '../dao/database/ProductManager.js'
 import { uploader } from '../uploader.js'
-import productModel from '../dao/models/products.model.js'
+//import productModel from '../dao/models/products.model.js'
 
 const productManager = new ProductManager()
 const router = Router()
 
+/*
 router.get("/", async (req, res) => {
-  const {limit, page, category, status, sort} = req.query;
+  const {limit, page, category, status, sort} = req.query
     // const {category} = req.params;
     try {
         let product = await productManager.getProducts(page, limit, category, status, sort)
-        // console.log('products.routes.js', product)
+
         const productExist = () => {
             if (Boolean(product.docs)) return 'success'
             else return 'error'
@@ -26,13 +27,29 @@ router.get("/", async (req, res) => {
             pagingCounter: product.pagingCounter, 
             hasPrevPage: product.hasPrevPage,
             hasNextPage: product.hasNextPage,
-            prevLink: product.prevPage,
-            nextLink: product.nextPage
+            prevLink: product.prevPage, 
+            nextLink: product.nextPage,
         })
-
+    
     } catch (error) {
         res.status(500).send(error.message)
     }
+})
+*/
+
+router.get("/", async (req, res) => {
+  const {limit, page, category, sort} = req.query
+    // const {category} = req.params;
+    try {
+      const result = await productManager.getProducts(limit, page, category, sort)
+
+      res.status(200).send({ status: 'OK', data: result})
+    } catch (error) {
+        res.status(500).send(error.message)
+    }
+  })
+
+
   /*try {
 
     //const limit = parseInt(req.query.limit) 
@@ -94,7 +111,6 @@ router.get("/", async (req, res) => {
   } catch (err) {
     res.status(500).send({ status: 'ERR', data: err.message })
   }*/
-})
 
 router.get("/:pid", async (req, res) => {
   try {

@@ -148,3 +148,13 @@ button:hover {
   margin: 16px 0;
   font-size: 16px;
 }
+
+.page-item {
+  color: black;
+  font-size: 1rem;
+  font-style: normal;
+}
+
+.page-link {
+  font-style: normal;
+}

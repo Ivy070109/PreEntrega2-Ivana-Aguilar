@@ -8,18 +8,6 @@ class ProductManager {
     //leer los productos
     readProducts = async () => {
         try {
-            // const products = await productModel.paginate(
-            //     {}, 
-            //     {   
-            //         page: page, 
-            //         limit: limit,
-            //         category: category,
-            //         sort: sort,
-            //         lean: true,
-            //     }
-            // )
-            // return products
-
             const products = await productModel.find().lean()
             return products
         } catch (err) {
@@ -38,6 +26,7 @@ class ProductManager {
     }
 
     //obtener todos los productos
+    /*
     getProducts = async (page, limit, category, sort, status) => {
         let options = {
 			page: page || 1,
@@ -71,6 +60,43 @@ class ProductManager {
 
 			const products = await productModel.paginate({}, options)
 			return products
+        } catch (err) {
+            return err.message
+        }
+    }*/
+    
+    getProducts = async (limit, page, category, sort) => {
+        try {
+            let query = {}
+        if (category) {
+            query.category = category
+        }
+    
+        let options = {
+            limit: parseInt(limit) || 10,
+            page: parseInt(page) || 1
+        }
+    
+        if (sort) {
+            options.sort = {
+                price: sort === 'asc' ? 1 : -1
+            }
+        }
+    
+        const result =  await productModel.paginate(query, options)
+
+        return {
+            status: 'success',
+            payload: result.docs,
+            totalPages: result.totalPages,
+            prevPage: result.prevPage,
+            nextPage: result.nextPage,
+            page: result.page,
+            hasPrevPage: result.hasPrevPage,
+            hasNextPage: result.hasNextPage,
+            prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}` : null,
+            nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}` : null,
+        }
         } catch (err) {
             return err.message
         }

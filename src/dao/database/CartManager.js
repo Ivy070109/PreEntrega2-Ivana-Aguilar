@@ -39,25 +39,6 @@ class CartManager {
         }
     }
 
-    // addProductInCart = async (cartId, productId) => {
-    //     try {
-    //         const filter = { _id: cartId, "products._id": productId._id }
-    //         const cart = await cartModel.findById(cartId)
-    //         const findProduct = cart.products.some((product) => product._id.toString() === productId._id)
-    
-    //         if (findProduct) {
-    //             const update = { $inc: { "products.$.quantity": productId.quantity } }
-    //             await cartModel.updateOne(filter, update)
-    //         } else {
-    //             const update = { $push: { products: { _id: productId._id, quantity: productId.quantity } } }
-    //             await cartModel.updateOne({ _id: cartId }, update)
-    //         }
-    //         return await cartModel.findById(cartId)
-    //     } catch (error) {
-    //         return error.message('Error al agregar el producto al carrito')
-    //     }
-    // }
-
     //borrar carrito según su id
     deleteCart = async (cartId) => {
         try {
@@ -97,28 +78,6 @@ class CartManager {
         } catch (err) {
             return err.message()
         }
-        // try {
-        //     const cart = await this.getCartById(cartId)
-        //     if (!cart) {
-        //         return err.message(`El carrito no existe`)
-        //     }
-
-            // const product = await productsModel.getProductById(productId)
-            // if (!product) {
-            //     return err.message(`El producto no existe`)
-            // }
-
-        //     const deleteProduct = cart.products.findIndex(prod => prod.id_prod._id.toString() === productId)
-        //     if (index !== -1) {
-        //         cart.products.splice(index, 1)
-        //     } else {
-        //         return err.message(`El producto no se encuentra en el carrito`)
-        //     }
-
-        //     return deleteProduct
-        // } catch (err) {
-        //     return err.message
-        // }
     }
 
     //modificar producto en carrito 
