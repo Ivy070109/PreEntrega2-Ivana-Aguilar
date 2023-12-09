@@ -41,17 +41,6 @@ router.get('/:cid', async (req, res) => {
 
 //agregar producto en carrito
 router.post('/:cid/products/:pid', async (req, res) => {
-    // try {
-    //     const cartId = req.params.cid
-    //     const productId = req.params.pid
-    //     const { quantity } = req.body
-
-    //     const result = await cart.addProductInCart(cartId, { _id: productId, quantity: quantity })
-
-    //     return res.status(200).send({ message: `El producto ${productId} ha sido agregado al carrito`, data: result})
-    // } catch (err) {
-    //     res.status(500).send({ status: 'ERR', data: err.message })
-    // }
     try {
         const { cid, pid } = req.params
         const { quantity } = req.body
