@@ -53,6 +53,7 @@ router.post('/:cid/products/:pid', async (req, res) => {
     }
 })
 
+//actualizar cantidad de productos
 router.put('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params 
@@ -81,20 +82,6 @@ router.delete('/:cid', async (req, res) => {
     }
 })
 
-//actualizar la cantidad de productos --- modificar
-router.put('/:cid/products/:pid', async (req, res) => {
-    try {
-        const cartId = req.params.cid
-        const productId = req.params.pid
-        const quantity = req.body
-    
-        const update = await cart.updateProductInCart(cartId, productId, quantity)
-        return res.status(200).send({ status: 'OK', data: update })
-    } catch (err) {
-        res.status(500).send({ status: 'ERR', data: err.message })
-    }
-})
-
 //eliminar del carrito el producto seleccionado
 router.delete('/:cid/products/:pid', async (req, res) => {
     try {
@@ -102,18 +89,6 @@ router.delete('/:cid/products/:pid', async (req, res) => {
         const productDelete = await cart.deleteProductById(cid, pid)
 
         return res.status(200).send({ message: `El producto se eliminó`, data: productDelete })
-    } catch (err) {
-        res.status(500).send({ status: 'ERR', data: err.message })
-    }
-})
-
-//eliminar todos los productos del carrito 
-router.delete('/:cid', async (req, res) => {
-    try {
-        const cid = req.params.cid 
-
-        const deleteCart = await cart.findById(cid)
-        res.status(200).send({ status: 'OK', data: deleteCart })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
