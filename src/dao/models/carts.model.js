@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 //hay que importar el model de productos porque los vamos a utilizar para el populate
-//import productsModel from '../models/products.model.js'
 
 mongoose.pluralize(null)
 
@@ -23,6 +22,7 @@ const schema = new mongoose.Schema({
     
 })
 
+//populate
 schema.pre('find', function(){
     this.populate('products.product')
 })
