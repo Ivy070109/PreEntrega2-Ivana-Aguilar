@@ -35,7 +35,8 @@ class ProductManager {
     
         let options = {
             limit: parseInt(limit) || 10,
-            page: parseInt(page) || 1
+            page: parseInt(page) || 1,
+            lean: true,
         }
     
         if (sort) {
@@ -45,19 +46,7 @@ class ProductManager {
         }
     
         const result =  await productModel.paginate(query, options)
-
-        return {
-            status: 'success',
-            payload: result.docs,
-            totalPages: result.totalPages,
-            prevPage: result.prevPage,
-            nextPage: result.nextPage,
-            page: result.page,
-            hasPrevPage: result.hasPrevPage,
-            hasNextPage: result.hasNextPage,
-            prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}` : null,
-            nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}` : null,
-        }
+        return result
         } catch (err) {
             return err.message
         }

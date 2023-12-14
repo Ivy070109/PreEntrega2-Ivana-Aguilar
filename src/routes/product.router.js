@@ -6,12 +6,25 @@ const productManager = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
-  const {limit, page, category, sort} = req.query
     // const {category} = req.params;
     try {
+      const { limit, page, category, sort } = req.query
+
       const result = await productManager.getProducts(limit, page, category, sort)
 
-      res.status(200).send({ status: 'OK', data: result})
+      // res.status(200).send({ 
+      //   status: 'success',
+      //   payload: result.docs,
+      //   totalPages: result.totalPages,
+      //   prevPage: result.prevPage,
+      //   nextPage: result.nextPage,
+      //   page: result.page,
+      //   hasPrevPage: result.hasPrevPage,
+      //   hasNextPage: result.hasNextPage,
+      //   prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}` : null,
+      //   nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}` : null,
+      // })
+      res.status(200).send({ status: 'OK', data: result })
     } catch (error) {
         res.status(500).send(error.message)
     }
@@ -60,11 +73,16 @@ router.post("/", uploader.single('thumbnail'), async (req, res) => {
 
 router.put("/:pid", async (req, res) => {
   try {
-    const pid = req.params
-    const objModif = req.body
-    const productUpdated = await productManager.updateProduct(pid, objModif)
-  
-    return res.status(200).send({ status: 'OK', data: productUpdated })  
+    const { pid } = req.params
+    const { title, description, code, price, thumbnail, stock, category, status } = req.body
+
+    if (!title, !description, !code, !price, !thumbnail, !stock, !category, !status) {
+      res.status(400).send({ status: 'ERR', data: err.message})
+    }
+
+    const productUpdated = await productManager.updateProduct(pid, {title, description, code, price, thumbnail, stock, category, status })
+
+  return res.status(200).send({ status: 'OK', data: productUpdated })
   } catch (err) {
     res.status(500).send({ status: 'ERR', data: err.message })
   }

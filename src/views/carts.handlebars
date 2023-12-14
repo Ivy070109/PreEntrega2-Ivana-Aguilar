@@ -4,7 +4,8 @@
 
   {{#each cartsProducts}}
     <li class="card text-center mt-2 mb-2" style="width: 20rem">
-      <h3 class="card-title">Producto: {{product.title}}</h3>
+      <h3>ID: {{this._id}}</h3>
+      <h3 class="card-title">Producto: {{this.products.title}}</h3>
       <h5>Precio: ${{prod.price}}</h5>
       <h5>Categoría: {{this.id_prod.category}}</h5>
       <div class="border rounded-4">
@@ -16,7 +17,7 @@
         || Código:{{this.id_prod.code}}</h5>
       <h3>Cantidad: {{this.quantity}}</h3>
     </li>
-    {{/each}}
+  {{/each}}
 
 
 {{!--
