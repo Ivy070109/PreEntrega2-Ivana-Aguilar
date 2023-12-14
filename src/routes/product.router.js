@@ -6,24 +6,12 @@ const productManager = new ProductManager()
 const router = Router()
 
 router.get("/", async (req, res) => {
-    // const {category} = req.params;
     try {
       const { limit, page, category, sort } = req.query
 
       const result = await productManager.getProducts(limit, page, category, sort)
-
-      // res.status(200).send({ 
-      //   status: 'success',
-      //   payload: result.docs,
-      //   totalPages: result.totalPages,
-      //   prevPage: result.prevPage,
-      //   nextPage: result.nextPage,
-      //   page: result.page,
-      //   hasPrevPage: result.hasPrevPage,
-      //   hasNextPage: result.hasNextPage,
-      //   prevLink: result.hasPrevPage ? `/api/products?limit=${limit}&page=${result.prevPage}` : null,
-      //   nextLink: result.hasNextPage ? `/api/products?limit=${limit}&page=${result.nextPage}` : null,
-      // })
+      console.log(result)
+      
       res.status(200).send({ status: 'OK', data: result })
     } catch (error) {
         res.status(500).send(error.message)

@@ -29,6 +29,7 @@ class ProductManager {
     getProducts = async (limit, page, category, sort) => {
         try {
             let query = {}
+            
         if (category) {
             query.category = category
         }

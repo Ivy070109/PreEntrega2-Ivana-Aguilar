@@ -17,10 +17,22 @@ body {
   text-align: center;
   width: 100%;
   font-size: 2rem;
-  margin: 1rem;
+  margin: .5rem;
   padding: 1rem;
 }
   
+.controller{
+  display: flex;
+  align-items: center;
+  text-align: center;
+  width: 100%;
+  font-size: 2rem;
+  margin: 1rem;
+  padding: 1rem;
+  align-content: center;
+  justify-content: center;
+}
+
 #list-products{
   position: relative;
   display: flex;
@@ -157,4 +169,14 @@ button:hover {
 
 .page-link {
   font-style: normal;
+}
+
+.form-cart {
+  margin: 1rem;
+}
+
+a {
+  text-decoration: none;
+  margin: 1rem;
+  color: black;
 }

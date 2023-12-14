@@ -21,7 +21,7 @@ router.get('/chat', (req, res) => {
 })
 
 router.get('/products', async (req, res) => {
-    const data = await productManager.getProducts(req.query.page || 1, req.query.limit || 5)
+    const data = await productManager.getProducts(req.query.page, req.query.limit)
     
     data.pages = []
     for (let i = 1; i <= data.totalPages; i++) data.pages.push(i)
