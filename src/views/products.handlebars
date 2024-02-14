@@ -1,5 +1,5 @@
 <div id="titlePrincipal">
-    <h2>Nuestros Productos</h2>
+    <h2>Bienvenido</h2>
 </div>
 
 <div class="controller"> 
@@ -15,7 +15,7 @@
 
 <div class="list-products">
     {{#each data.docs}}
-    <article class="container">
+      <article class="container">
         <div class="card">
             <div class="imgBx">
                 <img src="{{this.thumbnail}}" height="310" width="200"/>
@@ -26,9 +26,7 @@
                 <button class="botons" type="button" id="buy" href="#">Comprar</button>
             </div>
         </div>
-    </article> 
-{{/each}}
+      </article> 
+    {{/each}}
 </div>
 
-{{!--
-<script src="/socket.io/socket.io.js"></script> --}}

@@ -1,20 +1,8 @@
 import { Router } from "express"
 import CartManager from "../dao/database/CartManager.js"
-//import ProductManager from '../dao/database/ProductManager.js'
 
 const cart = new CartManager()
-//const product = new ProductManager()
 const router = Router()
-
-//crear carrito
-router.post('/', async (req, res) => {
-    try {
-        const newCart = await cart.addCarts()
-        return res.status(200).send({ status: "OK", data: newCart })    
-    } catch (err) {
-        res.status(500).send({ status: 'ERR', data: err.message })
-    }
-})
 
 //ver todos los carritos
 router.get('/', async (req, res) => {
@@ -32,6 +20,9 @@ router.get('/:cid', async (req, res) => {
     try {
         const { cid } = req.params
         const foundCart = await cart.getCartById(cid)
+        if (!foundCart) {
+            return res.status(404).send({ status: 'ERR', message: 'Carrito no encontrado'})
+        }
     
         return res.status(200).send({ status: "OK", data: foundCart })    
     } catch (err) {
@@ -39,28 +30,28 @@ router.get('/:cid', async (req, res) => {
     }
 })
 
-//agregar producto en carrito
-router.post('/:cid/products/:pid', async (req, res) => {
+//crear carrito
+router.post('/', async (req, res) => {
     try {
-        const { cid, pid } = req.params
-        const { quantity } = req.body
-
-        const result = await cart.addProductInCart(cid, { _id: pid, quantity: quantity })
-        return res.status(200).send({ status: 'OK', data: result })
-
+        const product = req.body
+        const newCart = await cart.addCart(product)
+        
+        return res.status(200).send({ status: 'OK', data: newCart })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
 })
 
-//actualizar cantidad de productos
-router.put('/:cid/products/:pid', async (req, res) => {
+//modificar carrito
+router.put(':/cid', async (req, res) => {
     try {
-        const { cid, pid } = req.params 
-        const { quantity } = req.body 
-
-        const aggregateProduct = await cart.addProductInCart(cid, { _id: pid, quantity: quantity })
-        res.status(200).send({ status: 'OK', data: aggregateProduct })
+        const { cid } = req.params
+        const { newProducts } = req.body 
+        const updated = await cart.updateCart(cid, newProducts)
+        if (!updated) {
+            return res.status(400).send({ status: 'ERR', message: 'El carrito no se encuentra' })
+        }
+        return res.status(200).send({ status: 'OK', data: updated })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
@@ -70,13 +61,37 @@ router.put('/:cid/products/:pid', async (req, res) => {
 router.delete('/:cid', async (req, res) => {
     try {
         const cid = req.params.cid
-        const response = await cart.deleteCart(cid)
+        const deleteCart = await cart.deleteCart(cid)
 
-        if (response === true) {
-            res.status(200).send({ message: 'Carrito eliminado', cart: response })
+        if (deleteCart === true) {
+            res.status(200).send({ status: 'OK', data: deleteCart})
         } else {
-            res.status(404).send({ message: 'Carrito no encontrado', response })
+            res.status(404).send({ status: 'ERR', data: 'Carrito no encontrado'})
         }
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+//agregar producto en carrito
+router.post('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { cid, pid } = req.params
+        const addProduct = await cart.addProductInCart(cid, pid)
+        return res.status(200).send({ status: 'OK', data: addProduct })
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+//actualizar cantidad de productos
+router.put('/:cid/products/:pid', async (req, res) => {
+    try {
+        const { pid, cid } = req.params
+        const { quantity } = req.body
+
+        const updateCart = await cart.updateProductInCart(cid, pid, quantity)
+        return res.status(200).send({ status: 'OK', data: updateCart })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
@@ -86,12 +101,31 @@ router.delete('/:cid', async (req, res) => {
 router.delete('/:cid/products/:pid', async (req, res) => {
     try {
         const { cid, pid } = req.params
-        const productDelete = await cart.deleteProductById(cid, pid)
-
-        return res.status(200).send({ message: `El producto se eliminó`, data: productDelete })
+        const deleteProduct = await cart.deleteProductInCart(cid, pid)
+        return res.status(200).send({ status: 'OK', data: deleteProduct })
     } catch (err) {
         res.status(500).send({ status: 'ERR', data: err.message })
     }
 })
+
+router.delete('/:cid/clear', async (req, res) => {
+    try {
+        const cartId = req.params.cid
+        const result = await cart.deleteAllProductsInCart(cartId)
+
+        return res.status(200).send(result)
+    } catch (err) {
+        res.status(500).send({ status: 'ERR', data: err.message })
+    }
+})
+
+router.param('cid', async (req, res, next, pid) => {
+    const regex = new RegExp(/^[a-fA-F0-9]{24}$/)
+    if (regex.test(req.params.cid)) {
+        next()
+    } else {
+        res.status(404).send({ status: 'ERR', data: 'Parámetro no válido' })
+    }
+})  
 
 export default router

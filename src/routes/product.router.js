@@ -10,7 +10,7 @@ router.get("/", async (req, res) => {
       const { limit, page, category, sort } = req.query
 
       const result = await productManager.getProducts(limit, page, category, sort)
-      console.log(result)
+      //console.log(result)
       
       res.status(200).send({ status: 'OK', data: result })
     } catch (error) {
@@ -18,17 +18,14 @@ router.get("/", async (req, res) => {
     }
   })
 
-router.get("/:pid", async (req, res) => {
+router.get('/:pid', async (req, res) => {
   try {
-    const pid = req.params
-    if (!pid) {
-        return res.status(404).send(`El producto no existe`)
-    } 
-    const productById = await productManager.getProductById(pid)
+    const { pid } = req.params
+    const productFound = await productManager.getProductById(pid)
 
-    res.status(200).send({ status: 'OK', data: productById })
+    res.status(200).send({ status: 'OK', data: productFound})
   } catch (err) {
-    res.status(500).send({ status: 'ERR', data: err.message })
+    res.status(200).send({ status: 'ERR', data: err.message })
   }
 })
 

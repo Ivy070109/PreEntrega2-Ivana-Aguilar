@@ -57,11 +57,7 @@ class ProductManager {
     getProductById = async (pid) => {
         try {
             const productById = await productModel.findById(pid)
-            if (!productById) {
-                return "El producto no existe"
-            } else {
-                return productById
-            }
+            return productById
         } catch (err) {
             return err.message
         }

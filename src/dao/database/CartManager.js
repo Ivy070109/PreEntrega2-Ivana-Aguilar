@@ -4,11 +4,10 @@ class CartManager {
     constructor() {
     }
 
-    //obtener carrito
+    //obtener carritos
     getCarts = async () => {
         try {
             const carts = await cartModel.find().lean()
-            //const carts = await cartModel.find().populate({ path: 'products', model: productsModel }).lean()
             return carts
         } catch (err) {
             return err.message
@@ -18,7 +17,7 @@ class CartManager {
     //obtener el carrito según id
     getCartById = async (cartId) => {
         try {
-            const cart = await cartModel.findById({ _id: cartId }).populate({ path: 'products', model: productsModel })
+            const cart = await cartModel.findById(cartId).populate('products.product').lean()
             return cart
         } catch (err) {
             return err.message
@@ -26,75 +25,110 @@ class CartManager {
     }
 
     //crear carrito
-    addCarts = async (products) => {
+    addCart = async (cart) => {
         try {
-            let cartProducts = {}
-            if (products && products.length > 0) {
-                cartProducts.products = products
-            }
-            await cartModel.create(cartProducts)
-            return (`Carrito creado`)
+            const cartExist = await cartModel.create(cart)
+            return cartExist
         } catch (err) {
             return err.message
         }
     }
 
+    //modificar carrito
+    updateCart = async (cartId, newProductBody) => {
+        try {
+            const findCart = await cartModel.findById(cartId)
+            const newProduct = newProductBody
+
+            findCart.products = newProduct
+            await findCart.save()
+            return findCart
+        } catch (err) {
+            return err.message
+        }
+    }
+    
     //borrar carrito según su id
     deleteCart = async (cartId) => {
         try {
-            const cart = await cartModel.findByIdAndDelete(cartId)
+            const cart = await cartModel.findByIdAndDelete({ _id: cartId })
             return cart
         } catch (err) {
-            return err.message(`No se encuentra el carrito con id: ${cartId}`)
+            return err.message(`No se encuentra el carrito`)
         }
     }
-
+    
     //agregar producto en carrito
-    addProductInCart = async (cartId, product) => {
-		try {
-            const newProduct = { product: product._id, quantity: 1 }
-			const cart = await cartModel.findById(cartId)
-			const findProduct = cart.products.findIndex(product => product.product.toString() === newProduct.product)
+    addProductInCart = async (cartId, productId) => {
+        try {
+            const cart = await cartModel.findById(cartId)
+            if (!cart) {
+                return ('El carrito no se puede encontrar')
+            }
+            const productIndex = cart.products.findIndex((prod) => prod.product.equals(productId))
+            if (productIndex !== -1) {
+                cart.products[productIndex].quantity++
+            } else {
+                cart.products.push({ product: productId, quantity: 1 })
+            }
 
-			if (findProduct === -1) {
-				cart.products.push(newProduct)
-				const savedCart = await cart.save()
-				return savedCart
-			} else {
-				cart.products[findProduct].quantity++
-				const savedCart = await cart.save()
-				return savedCart
-			}
+            return cart.save()
 		} catch (err) {
-			return err.message('Error al agregar el producto al carrito')
+			return err.message
 		}
     }
 
-    //borrar productos en carrito
-    deleteProductById = async (cartId, productId) => {
-        try {
-            const newCart = await cartModel.updateOne({ _id: cartId }, { $pull: { products: { _id: productId } } })
-            return newCart
-        } catch (err) {
-            return err.message()
-        }
-    }
-
-    //modificar producto en carrito 
+    //modificar cantidad del producto en carrito
     updateProductInCart = async (cartId, productId, quantity) => {
         try {
-            const update = await cartModel.updateOne({ id: cartId, 'products.product': productId }, { $inc: { 'products.$.quantity': quantity } })
-            return update
+            const cart = await cartModel.findById(cartId)
+            if (!cart) {
+                return ('Carrito no encontrado')
+            }
+            const productArray = cart.products.findIndex((prod) => prod.product.equals(productId))
+            if (productArray !== -1) {
+                cart.products[productArray].quantity = quantity
+            } else {
+                cart.products.push({ product: productId, quantity: 1 })
+            }
+
+            return cart.save()
         } catch (err) {
             return err.message
         }
     }
 
-    //borrar todos los productos 
+    //borrar los productos en el carrito
+    async deleteProductInCart(cartId, productId) {
+        try {
+            const cart = await cartModel.findById(cartId)
+            if (!cart) {
+                return ('Carrito no encontrado')
+            }
+            const productIndex = cart.products.findIndex(prod => prod.product._id.equals(productId))
+            if (productIndex === -1) {
+                return ('Producto no encontrado en el carrito')
+            }
+
+            cart.products.splice(productIndex, 1)
+            await cart.save()
+            return cart
+        } catch (err) {
+            return err.message
+        }
+    }
+
+    //borrar todos los productos en el carrito
     deleteAllProductsInCart = async (cartId) => {
         try {
-            const deleteAll = await cartModel.updateOne({ id: cartId }, { $set: { products: [] } })
-            return deleteAll
+            const cart = await cartModel.findById(cartId)
+            if (!cart) {
+                return ('El carrito no se puede encontrar')
+            }
+
+            cart.products = []
+            await cart.save()
+            return cart
         } catch (err) {
             return err.message
         }
